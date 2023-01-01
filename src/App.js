@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import "../src/app.css";
+import "../src/App.css";
+import { Grid, TextField, Item } from "@material-ui/core";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState("inactive");
@@ -31,19 +33,58 @@ function App() {
   };
 
   const data = [
-    {
-      id: 1,
-      name: "Bayram",
-      surname: "Alkan",
-      father: null,
-      mother: null,
-    },
+    // {
+    //   id: 1,
+    //   name: "Emre",
+    //   surname: "Yıldız",
+    //   father: null,
+    //   mother: null,
+    // },
     {
       id: 2,
-      name: "Mehmet",
+      name: "Bayram",
       surname: "Alkan",
-      father: 1,
-      mother: 1,
+      father: [
+        {
+          id: 1,
+          name: "Erkan",
+          surname: "Alkan",
+        },
+      ],
+      mother: [
+        {
+          id: 1,
+          name: "Fadime",
+          surname: "Alkan",
+        },
+      ],
+
+      siblings: [
+        {
+          id: 1,
+          name: "Mehmet",
+          surname: "Alkan",
+          father: [
+            {
+              id: 1,
+              name: "Erkan",
+              surname: "Alkan",
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Emre",
+          surname: "Alkan",
+          father: [
+            {
+              id: 1,
+              name: "Erkan",
+              surname: "Alkan",
+            },
+          ],
+        },
+      ],
     },
   ];
 
@@ -56,55 +97,129 @@ function App() {
         >
           <div className="menu">
             <h2>{name}</h2>
-            <ul>
-              <li>
-                BABA ADI{" "}
-                <input
-                  type="text"
-                  name=""
-                  id=""
+
+            <Grid
+              container
+              spacing={2}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="BABA ADI"
+                  variant="outlined"
                   onChange={(e) => {
                     setFather(e.target.value);
                   }}
                 />
-              </li>
-              <li>
-                BABA TC <input type="number" name="" id="" />
-              </li>
-              <li>
-                ANNE ADI{" "}
-                <input
-                  type="text"
-                  name=""
-                  id=""
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="BABA TC"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="ANNE ADI"
+                  variant="outlined"
                   onChange={(e) => {
                     setMother(e.target.value);
                   }}
                 />
-              </li>
-
-              <li>
-                ANNE TC <input type="number" name="" id="" />
-              </li>
-            </ul>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="ANNE TC"
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
           </div>
         </div>
-        <div className="content-container" onClick={toggleMenu}>
+        <div className="content-container">
           {data.map((item, index) => {
             return (
-              <div key={index} className="content">
-                <div className="content-item">
+              <div
+                key={index}
+                className="content"
+                style={{
+                  marginLeft: "150px",
+                }}
+              >
+                <div className="content-wrapper">
+                  <div className="parents">
+                    <div
+                      className={item.father ? `content-item__father` : "dpn"}
+                      onClick={() => {
+                        setName(item.father[0].name);
+                        toggleMenu();
+                      }}
+                    >
+                      {item.father?.map((item, index) => {
+                        return (
+                          <div key={index}>
+                            {item.name} {item.surname}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div
+                      className={item.mother ? `content-item__mother` : "dpn"}
+                      onClick={() => {
+                        setName(item.mother[0].name);
+                        toggleMenu();
+                      }}
+                    >
+                      {item.mother?.map((item, index) => {
+                        return (
+                          <div key={index}>
+                            {item.name} {item.surname}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {item.father && (
+                    <ArrowUpwardIcon
+                      style={{
+                        fontSize: "50px",
+                      }}
+                    />
+                  )}
                   <div
-                    className="content-item__name"
+                    className="content-item"
                     onClick={() => {
                       setName(item.name);
+                      toggleMenu();
                     }}
                   >
-                    {item.name} {item.surname}
-                  </div>
-                  <div className="content-item__father">
-                    {father ? father : " BABA BULUNAMADI"}
-                    {mother ? mother : " ANNE BULUNAMADI"}
+                    <div className="content-item__name">
+                      {item.name} {item.surname}
+                    </div>
+
+                    <div className="dpf">
+                      {item.siblings?.map((item, index) => {
+                        return (
+                          <div
+                            className={
+                              item.father ? `content-item__sibling ` : "dpn"
+                            }
+                            key={index}
+                          >
+                            {item.name}
+                            {item.surname}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
